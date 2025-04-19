@@ -11,28 +11,28 @@
  */
 import { ChartTooltip } from '@components/ChartTooltip';
 import {
-	DEFAULT_OPACITY_RULE,
-	FILTERED_TABLE,
-	HIGHLIGHTED_GROUP,
-	HIGHLIGHTED_ITEM,
-	HIGHLIGHT_CONTRAST_RATIO,
-	INTERACTION_MODE,
-	SERIES_ID,
+  DEFAULT_OPACITY_RULE,
+  FILTERED_TABLE,
+  HIGHLIGHTED_GROUP,
+  HIGHLIGHTED_ITEM,
+  HIGHLIGHT_CONTRAST_RATIO,
+  INTERACTION_MODE,
+  SERIES_ID,
 } from '@constants';
 import { getFilteredTableData } from '@specBuilder/data/dataUtils';
 import { getHoverMarkNames } from '@specBuilder/marks/markUtils';
 import { Data, FormulaTransform, NumericValueRef, Signal, SourceData } from 'vega';
 
 import {
-	AreaSpecProps,
-	BarSpecProps,
-	ChartTooltipElement,
-	ChartTooltipProps,
-	ChartTooltipSpecProps,
-	DonutSpecProps,
-	LineSpecProps,
-	ScatterSpecProps,
-    VennSpecProps,
+  AreaSpecProps,
+  BarSpecProps,
+  ChartTooltipElement,
+  ChartTooltipProps,
+  ChartTooltipSpecProps,
+  DonutSpecProps,
+  LineSpecProps,
+  ScatterSpecProps,
+  VennSpecProps,
 } from '../../types';
 
 type TooltipParentProps = AreaSpecProps | BarSpecProps | DonutSpecProps | LineSpecProps | ScatterSpecProps | VennSpecProps;
@@ -43,10 +43,10 @@ type TooltipParentProps = AreaSpecProps | BarSpecProps | DonutSpecProps | LineSp
  * @returns
  */
 export const getTooltips = (markProps: TooltipParentProps): ChartTooltipSpecProps[] => {
-	const chartTooltipElements = markProps.children.filter(
-		(child) => child.type === ChartTooltip
-	) as ChartTooltipElement[];
-	return chartTooltipElements.map((chartTooltip) => applyTooltipPropDefaults(chartTooltip.props, markProps.name));
+  const chartTooltipElements = markProps.children.filter(
+    (child) => child.type === ChartTooltip
+  ) as ChartTooltipElement[];
+  return chartTooltipElements.map((chartTooltip) => applyTooltipPropDefaults(chartTooltip.props, markProps.name));
 };
 
 /**
@@ -55,14 +55,14 @@ export const getTooltips = (markProps: TooltipParentProps): ChartTooltipSpecProp
  * @returns ChartTooltipSpecProps
  */
 export const applyTooltipPropDefaults = (
-	{ highlightBy = 'item', ...props }: ChartTooltipProps,
-	markName: string
+  { highlightBy = 'item', ...props }: ChartTooltipProps,
+  markName: string
 ): ChartTooltipSpecProps => {
-	return {
-		highlightBy,
-		markName,
-		...props,
-	};
+  return {
+    highlightBy,
+    markName,
+    ...props,
+  };
 };
 
 /**
@@ -73,25 +73,25 @@ export const applyTooltipPropDefaults = (
  * @param chartTooltipProps
  */
 export const addTooltipData = (data: Data[], markProps: TooltipParentProps, addHighlightedData = true) => {
-	const tooltips = getTooltips(markProps);
-	for (const { highlightBy, markName } of tooltips) {
-		if (highlightBy === 'item') return;
-		const filteredTable = getFilteredTableData(data);
-		if (!filteredTable.transform) {
-			filteredTable.transform = [];
-		}
-		if (highlightBy === 'dimension' && markProps.markType !== 'donut') {
-			filteredTable.transform.push(getGroupIdTransform([markProps.dimension], markName));
-		} else if (highlightBy === 'series') {
-			filteredTable.transform.push(getGroupIdTransform([SERIES_ID], markName));
-		} else if (Array.isArray(highlightBy)) {
-			filteredTable.transform.push(getGroupIdTransform(highlightBy, markName));
-		}
+  const tooltips = getTooltips(markProps);
+  for (const { highlightBy, markName } of tooltips) {
+    if (highlightBy === 'item') return;
+    const filteredTable = getFilteredTableData(data);
+    if (!filteredTable.transform) {
+      filteredTable.transform = [];
+    }
+    if (highlightBy === 'dimension' && markProps.markType !== 'donut') {
+      filteredTable.transform.push(getGroupIdTransform([markProps.dimension], markName));
+    } else if (highlightBy === 'series') {
+      filteredTable.transform.push(getGroupIdTransform([SERIES_ID], markName));
+    } else if (Array.isArray(highlightBy)) {
+      filteredTable.transform.push(getGroupIdTransform(highlightBy, markName));
+    }
 
-		if (addHighlightedData) {
-			data.push(getMarkHighlightedData(markName));
-		}
-	}
+    if (addHighlightedData) {
+      data.push(getMarkHighlightedData(markName));
+    }
+  }
 };
 
 /**
@@ -101,11 +101,11 @@ export const addTooltipData = (data: Data[], markProps: TooltipParentProps, addH
  * @returns FormulaTransform
  */
 export const getGroupIdTransform = (highlightBy: string[], markName: string): FormulaTransform => {
-	return {
-		type: 'formula',
-		as: `${markName}_highlightGroupId`,
-		expr: highlightBy.map((facet) => `datum.${facet}`).join(' + " | " + '),
-	};
+  return {
+    type: 'formula',
+    as: `${markName}_highlightGroupId`,
+    expr: highlightBy.map((facet) => `datum.${facet}`).join(' + " | " + '),
+  };
 };
 
 /**
@@ -114,19 +114,19 @@ export const getGroupIdTransform = (highlightBy: string[], markName: string): Fo
  * @returns
  */
 const getMarkHighlightedData = (markName: string): SourceData => ({
-	name: `${markName}_highlightedData`,
-	source: FILTERED_TABLE,
-	transform: [
-		{
-			type: 'filter',
-			expr: `${HIGHLIGHTED_GROUP} === datum.${markName}_highlightGroupId`,
-		},
-	],
+  name: `${markName}_highlightedData`,
+  source: FILTERED_TABLE,
+  transform: [
+    {
+      type: 'filter',
+      expr: `${HIGHLIGHTED_GROUP} === datum.${markName}_highlightGroupId`,
+    },
+  ],
 });
 
 export const isHighlightedByGroup = (markProps: TooltipParentProps) => {
-	const tooltips = getTooltips(markProps);
-	return tooltips.some(({ highlightBy }) => highlightBy && highlightBy !== 'item');
+  const tooltips = getTooltips(markProps);
+  return tooltips.some(({ highlightBy }) => highlightBy && highlightBy !== 'item');
 };
 
 /**
@@ -135,10 +135,10 @@ export const isHighlightedByGroup = (markProps: TooltipParentProps) => {
  * @returns
  */
 export const isHighlightedByDimension = (markProps: TooltipParentProps) => {
-	const tooltips = getTooltips(markProps);
-	return tooltips.some(
-		({ highlightBy }) => typeof highlightBy === 'string' && ['dimension', 'item'].includes(highlightBy)
-	);
+  const tooltips = getTooltips(markProps);
+  return tooltips.some(
+    ({ highlightBy }) => typeof highlightBy === 'string' && ['dimension', 'item'].includes(highlightBy)
+  );
 };
 
 /**
@@ -149,40 +149,40 @@ export const isHighlightedByDimension = (markProps: TooltipParentProps) => {
  * @param markProps
  */
 export const addTooltipSignals = (signals: Signal[], markProps: TooltipParentProps) => {
-	if (isHighlightedByGroup(markProps)) {
-		const highlightedGroupSignal = signals.find((signal) => signal.name === HIGHLIGHTED_GROUP) as Signal;
+  if (isHighlightedByGroup(markProps)) {
+    const highlightedGroupSignal = signals.find((signal) => signal.name === HIGHLIGHTED_GROUP) as Signal;
 
-		let markName = markProps.name;
-		let update = `datum.${markName}_highlightGroupId`;
+    let markName = markProps.name;
+    let update = `datum.${markName}_highlightGroupId`;
 
-		if ('interactionMode' in markProps && markProps.interactionMode === INTERACTION_MODE.ITEM) {
-			getHoverMarkNames(markName).forEach((name) => {
-				addMouseEvents(highlightedGroupSignal, name, update);
-			});
-		}
+    if ('interactionMode' in markProps && markProps.interactionMode === INTERACTION_MODE.ITEM) {
+      getHoverMarkNames(markName).forEach((name) => {
+        addMouseEvents(highlightedGroupSignal, name, update);
+      });
+    }
 
-		if (['scatter', 'line'].includes(markProps.markType)) {
-			update = `datum.${update}`;
-			markName += '_voronoi';
-		}
+    if (['scatter', 'line'].includes(markProps.markType)) {
+      update = `datum.${update}`;
+      markName += '_voronoi';
+    }
 
-		addMouseEvents(highlightedGroupSignal, markName, update);
-	}
+    addMouseEvents(highlightedGroupSignal, markName, update);
+  }
 };
 
 const addMouseEvents = (highlightedGroupSignal: Signal, markName: string, update: string) => {
-	if (highlightedGroupSignal.on === undefined) {
-		highlightedGroupSignal.on = [];
-	}
-	highlightedGroupSignal.on.push(
-		...[
-			{
-				events: `@${markName}:mouseover`,
-				update,
-			},
-			{ events: `@${markName}:mouseout`, update: 'null' },
-		]
-	);
+  if (highlightedGroupSignal.on === undefined) {
+    highlightedGroupSignal.on = [];
+  }
+  highlightedGroupSignal.on.push(
+    ...[
+      {
+        events: `@${markName}:mouseover`,
+        update,
+      },
+      { events: `@${markName}:mouseout`, update: 'null' },
+    ]
+  );
 };
 
 /**
@@ -193,24 +193,24 @@ const addMouseEvents = (highlightedGroupSignal: Signal, markName: string, update
  * @param markProps
  */
 export const addHighlightMarkOpacityRules = (
-	opacityRules: ({ test?: string } & NumericValueRef)[],
-	markProps: TooltipParentProps
+  opacityRules: ({ test?: string } & NumericValueRef)[],
+  markProps: TooltipParentProps
 ) => {
-	opacityRules.unshift(
-		{
-			test: `isArray(${HIGHLIGHTED_ITEM}) && length(${HIGHLIGHTED_ITEM}) > 0 && indexof(${HIGHLIGHTED_ITEM}, datum.${markProps.idKey}) === -1`,
-			value: 1 / HIGHLIGHT_CONTRAST_RATIO,
-		},
-		{
-			test: `!isArray(${HIGHLIGHTED_ITEM}) && isValid(${HIGHLIGHTED_ITEM}) && ${HIGHLIGHTED_ITEM} !== datum.${markProps.idKey}`,
-			value: 1 / HIGHLIGHT_CONTRAST_RATIO,
-		}
-	);
-	if (isHighlightedByGroup(markProps)) {
-		const { name: markName } = markProps;
-		opacityRules.unshift({
-			test: `${HIGHLIGHTED_GROUP} === datum.${markName}_highlightGroupId`,
-			...DEFAULT_OPACITY_RULE,
-		});
-	}
+  opacityRules.unshift(
+    {
+      test: `isArray(${HIGHLIGHTED_ITEM}) && length(${HIGHLIGHTED_ITEM}) > 0 && indexof(${HIGHLIGHTED_ITEM}, datum.${markProps.idKey}) === -1`,
+      value: 1 / HIGHLIGHT_CONTRAST_RATIO,
+    },
+    {
+      test: `!isArray(${HIGHLIGHTED_ITEM}) && isValid(${HIGHLIGHTED_ITEM}) && ${HIGHLIGHTED_ITEM} !== datum.${markProps.idKey}`,
+      value: 1 / HIGHLIGHT_CONTRAST_RATIO,
+    }
+  );
+  if (isHighlightedByGroup(markProps)) {
+    const { name: markName } = markProps;
+    opacityRules.unshift({
+      test: `${HIGHLIGHTED_GROUP} === datum.${markName}_highlightGroupId`,
+      ...DEFAULT_OPACITY_RULE,
+    });
+  }
 };

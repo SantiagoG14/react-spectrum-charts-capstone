@@ -20,3 +20,7 @@ export const VENN_DEFAULT_STYLES = {
 } satisfies Required<VennProps['style']>;
 
 export const SET_ID_DELIMITER = '∩';
+
+export const DEFAULT_FIELD_SET= 'sets'
+export const DEFAULT_LABEL = 'label'
+

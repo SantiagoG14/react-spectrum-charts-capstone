@@ -9,14 +9,21 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC } from 'react';
 
-import { VENN_DEFAULT_STYLES } from '@specBuilder/venn/vennDefaults';
+import { DEFAULT_FIELD_SET, VENN_DEFAULT_STYLES } from '@specBuilder/venn/vennDefaults';
 
 import { VennProps } from '../../types';
 
-const Venn: FC<VennProps> = ({ orientation, setField, metric, style = VENN_DEFAULT_STYLES }) => {
-	return null;
+const Venn: FC<VennProps> = ({
+  orientation = Math.PI,
+  setField = DEFAULT_FIELD_SET,
+  metric = 'size',
+  style = VENN_DEFAULT_STYLES,
+}) => {
+  return null;
 };
 
 Venn.displayName = 'Venn';
