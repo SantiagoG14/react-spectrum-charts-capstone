@@ -13,7 +13,6 @@ import {
   getColorProductionRule,
   getMarkOpacity,
   getTooltip,
-  hasInteractiveChildren,
   hasPopover,
   isInteractive,
 } from '@specBuilder/marks/markUtils';
@@ -213,14 +212,8 @@ export const getInterserctionMark = (props: VennSpecProps, popovers: ChartPopove
         tooltip: getTooltip(children, `${name}`),
       },
 
-      hover: hasInteractiveChildren(children)
-        ? {
-          fillOpacity: { value: 0.8 },
-        }
-        : undefined,
-
       update: {
-        fillOpacity: getMarkOpacity(props, 0.001),
+        fillOpacity: getMarkOpacity(props, 0, 0.7),
         cursor: popovers.length ? { value: 'pointer' } : undefined,
       },
     },

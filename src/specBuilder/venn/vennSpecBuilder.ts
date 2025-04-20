@@ -10,20 +10,20 @@
  * governing permissions and limitations under the License.
  */
 import {
-  COLOR_SCALE,
-  COMPONENT_NAME,
-  DEFAULT_COLOR,
-  DEFAULT_COLOR_SCHEME,
-  DEFAULT_METRIC,
-  SELECTED_GROUP,
-  TABLE,
+	COLOR_SCALE,
+	COMPONENT_NAME,
+	DEFAULT_COLOR,
+	DEFAULT_COLOR_SCHEME,
+	DEFAULT_METRIC,
+	SELECTED_GROUP,
+	TABLE,
 } from '@constants';
 import { addPopoverData, getPopovers } from '@specBuilder/chartPopover/chartPopoverUtils';
 import { getTooltipProps, hasInteractiveChildren } from '@specBuilder/marks/markUtils';
 import { addFieldToFacetScaleDomain } from '@specBuilder/scale/scaleSpecBuilder';
 import {
-  addHighlightedItemSignalEvents,
-  addHighlightedSeriesSignalEvents,
+	addHighlightedItemSignalEvents,
+	addHighlightedSeriesSignalEvents,
 } from '@specBuilder/signal/signalSpecBuilder';
 import { sanitizeMarkChildren, toCamelCase } from '@utils';
 import { produce } from 'immer';
@@ -33,189 +33,197 @@ import type { ChartData, ColorScheme, HighlightedItem, VennSpecProps } from '../
 import { VennProps } from '../../types';
 import { DEFAULT_FIELD_SET, DEFAULT_LABEL, SET_ID_DELIMITER, VENN_DEFAULT_STYLES } from './vennDefaults';
 import {
-  getCircleMark,
-  getInteractiveMarkName,
-  getInterserctionMark,
-  getPopoverMarkName,
-  getStrokeMark,
-  getTextMark,
-  getVennSolution,
-  mergeStylesWithDefaults,
+	getCircleMark,
+	getInteractiveMarkName,
+	getInterserctionMark,
+	getPopoverMarkName,
+	getStrokeMark,
+	getTextMark,
+	getVennSolution,
+	mergeStylesWithDefaults,
 } from './vennUtils';
 
 export const addVenn = produce<
-  Spec,
-  [
-    VennProps & {
-      colorScheme?: ColorScheme;
-      highlightedItem?: HighlightedItem;
-      index?: number;
-      idKey: string;
-      data: ChartData[];
-      interactiveMarkName?: string;
-      popoverMarkName?: string;
-      chartWidth?: number | undefined;
-      chartHeight?: number | undefined;
-    }
-  ]
+	Spec,
+	[
+		VennProps & {
+			colorScheme?: ColorScheme;
+			highlightedItem?: HighlightedItem;
+			index?: number;
+			idKey: string;
+			data: ChartData[];
+			interactiveMarkName?: string;
+			popoverMarkName?: string;
+			chartWidth?: number | undefined;
+			chartHeight?: number | undefined;
+		}
+	]
 >(
-  (
-    spec,
-    {
-      orientation = Math.PI,
-      name,
-      metric = DEFAULT_METRIC,
-      children,
-      index = 0,
-      color = DEFAULT_COLOR,
-      colorScheme = DEFAULT_COLOR_SCHEME,
-      data,
-      idKey = 'set_id',
-      chartWidth = 100,
-      chartHeight = 100,
-      style = VENN_DEFAULT_STYLES,
-      label = DEFAULT_LABEL,
-      setField = DEFAULT_FIELD_SET,
-      ...props
-    }
-  ) => {
-    const vennProps: VennSpecProps = {
-      children: sanitizeMarkChildren(children),
-      name: toCamelCase(name ?? `venn${index}`),
-      dimension: 'venn',
-      markType: 'venn',
-      index,
-      setField,
-      colorScheme,
-      color,
-      label,
-      orientation,
-      data: data,
-      metric,
-      idKey,
-      interactiveMarkName: getInteractiveMarkName(
-        sanitizeMarkChildren(children),
-        toCamelCase(name ?? `venn${index}`),
-        props.highlightedItem
-      ),
-      popoverMarkName: getPopoverMarkName(sanitizeMarkChildren(children), toCamelCase(name ?? `venn${index}`)),
-      chartHeight,
-      chartWidth,
-      style: mergeStylesWithDefaults(style),
-      ...props,
-    };
-    spec.data = addData(spec.data ?? [], vennProps);
-    spec.signals = addSignals(spec.signals ?? [], vennProps);
-    spec.scales = addScales(spec.scales ?? []);
-    spec.marks = addMarks(spec.marks ?? [], vennProps);
-  }
+	(
+		spec,
+		{
+			orientation = Math.PI,
+			name,
+			metric = DEFAULT_METRIC,
+			children,
+			index = 0,
+			color = DEFAULT_COLOR,
+			colorScheme = DEFAULT_COLOR_SCHEME,
+			data,
+			idKey = 'set_id',
+			chartWidth = 100,
+			chartHeight = 100,
+			style = VENN_DEFAULT_STYLES,
+			label = DEFAULT_LABEL,
+			setField = DEFAULT_FIELD_SET,
+			...props
+		}
+	) => {
+		const vennProps: VennSpecProps = {
+			children: sanitizeMarkChildren(children),
+			name: toCamelCase(name ?? `venn${index}`),
+			dimension: 'venn',
+			markType: 'venn',
+			index,
+			setField,
+			colorScheme,
+			color,
+			label,
+			orientation,
+			data: data,
+			metric,
+			idKey,
+			interactiveMarkName: getInteractiveMarkName(
+				sanitizeMarkChildren(children),
+				toCamelCase(name ?? `venn${index}`),
+				props.highlightedItem
+			),
+			popoverMarkName: getPopoverMarkName(sanitizeMarkChildren(children), toCamelCase(name ?? `venn${index}`)),
+			chartHeight,
+			chartWidth,
+			style: mergeStylesWithDefaults(style),
+			...props,
+		};
+		spec.data = addData(spec.data ?? [], vennProps);
+		spec.signals = addSignals(spec.signals ?? [], vennProps);
+		spec.scales = addScales(spec.scales ?? []);
+		spec.marks = addMarks(spec.marks ?? [], vennProps);
+	}
 );
 
 export const addData = produce<Data[], [VennSpecProps]>((data, props) => {
-  const { circles, intersections } = getVennSolution(props);
+	const { circles, intersections } = getVennSolution(props);
 
-  data.push({
-    name: 'circles',
-    values: circles,
-    transform: [
-      { type: 'formula', as: 'strokeSize', expr: 'datum.size * 1' },
-      { type: 'formula', as: COMPONENT_NAME, expr: `"${props.name}"` },
-      ...getTableJoinTransforms(),
-    ],
-  });
+	data.push({
+		name: 'circles',
+		values: circles,
+		transform: [
+			{ type: 'formula', as: 'strokeSize', expr: 'datum.size * 1' },
+			{ type: 'formula', as: COMPONENT_NAME, expr: `"${props.name}"` },
+			...getTableJoinTransforms(),
+		],
+	});
 
-  data.push({
-    name: 'intersections',
-    values: intersections,
-    transform: getTableJoinTransforms(),
-  });
+	data.push({
+		name: 'intersections',
+		values: intersections,
+		transform: getTableJoinTransforms(),
+	});
 
-  const tableIndex = data.findIndex((d) => d.name === TABLE);
-  data[tableIndex].transform = data[tableIndex].transform ?? [];
-  data[tableIndex].transform?.push(...getTableTransforms(props));
+	const tableIndex = data.findIndex((d) => d.name === TABLE);
+	data[tableIndex].transform = data[tableIndex].transform ?? [];
+	data[tableIndex].transform?.push(...getTableTransforms(props));
 
-  // Pass the proper idKey to addPopoverData
-  addPopoverData(
-    data,
-    {
-      ...props,
-      idKey: 'set_id',
-    },
-    true
-  );
+	// Pass the proper idKey to addPopoverData
+	addPopoverData(
+		data,
+		{
+			...props,
+			idKey: 'set_id',
+		},
+		true
+	);
 });
 
 export const addMarks = produce<Mark[], [VennSpecProps]>((marks, props) => {
-  const popovers = getPopovers(props);
+	const popovers = getPopovers(props);
 
-  marks.push(getCircleMark(props, popovers));
-  marks.push(getTextMark(props, 'circles'), getTextMark(props, 'intersections'));
-  marks.push(getStrokeMark(props));
-  marks.push(getInterserctionMark(props, popovers));
+	marks.push(getCircleMark(props, popovers));
+	marks.push(getTextMark(props, 'circles'), getTextMark(props, 'intersections'));
+	marks.push(getStrokeMark(props));
+	marks.push(getInterserctionMark(props, popovers));
 });
 
 export const addScales = produce<Scale[]>((scales) => {
-  addFieldToFacetScaleDomain(scales, COLOR_SCALE, 'set_legend');
+	addFieldToFacetScaleDomain(scales, COLOR_SCALE, 'set_legend');
 });
 
 export const getTableTransforms = (props: VennSpecProps): (FormulaTransform | FilterTransform)[] => [
-  {
-    type: 'formula',
-    as: 'set_id',
-    expr: `join(datum.${props.setField}, '${SET_ID_DELIMITER}')`,
-  },
-  {
-    type: 'formula',
-    as: 'set_legend',
-    expr: `length(datum.${props.setField}) > 1 ? datum.${props.setField}[0]: join(datum.${props.setField}, '${SET_ID_DELIMITER}')`,
-  },
+	{
+		type: 'formula',
+		as: 'set_id',
+		expr: `join(datum.${props.setField}, '${SET_ID_DELIMITER}')`,
+	},
+	{
+		type: 'formula',
+		as: 'set_legend',
+		expr: `length(datum.${props.setField}) > 1 ? datum.${props.setField}[0]: join(datum.${props.setField}, '${SET_ID_DELIMITER}')`,
+	},
 ];
 
 export const getTableJoinTransforms = (): (LookupTransform | FormulaTransform)[] => [
-  {
-    type: 'lookup',
-    key: 'set_id',
-    fields: ['set_id'],
-    from: TABLE,
-    as: ['table_data'],
-  },
-  { type: 'formula', as: 'rscSeriesId', expr: 'datum.table_data.set_id' },
-  { type: 'formula', expr: 'datum.table_data.rscMarkId', as: 'rscMarkId' },
+	{
+		type: 'lookup',
+		key: 'set_id',
+		fields: ['set_id'],
+		from: TABLE,
+		as: ['table_data'],
+	},
+	{ type: 'formula', as: 'rscSeriesId', expr: 'datum.table_data.set_id' },
+	{ type: 'formula', expr: 'datum.table_data.rscMarkId', as: 'rscMarkId' },
 ];
 
 export const addSignals = produce<Signal[], [VennSpecProps]>((signals, props) => {
-  const { children, name, idKey } = props;
-  const popovers = getPopovers(props);
+	const { children, name, idKey } = props;
+	const popovers = getPopovers(props);
 
-  // Make sure selectedGroup signal exists
-  if (!signals.some((signal) => signal.name === SELECTED_GROUP)) {
-    signals.push({
-      name: SELECTED_GROUP,
-      value: null,
-      on: [
-        {
-          events: { source: 'view', type: 'click', filter: '!event.item || !datum' },
-          update: 'null',
-        },
-      ],
-    });
-  }
+	// Make sure selectedGroup signal exists
+	if (!signals.some((signal) => signal.name === SELECTED_GROUP)) {
+		signals.push({
+			name: SELECTED_GROUP,
+			value: null,
+			on: [
+				{
+					events: { source: 'view', type: 'click', filter: '!event.item || !datum' },
+					update: 'null',
+				},
+			],
+		});
+	}
 
-  // If we have popovers, add a click handler to update selectedGroup
-  if (popovers.length) {
-    const selectedGroupSignal = signals.find((signal) => signal.name === SELECTED_GROUP);
-    if (selectedGroupSignal) {
-      if (!selectedGroupSignal.on) {
-        selectedGroupSignal.on = [];
-      }
-      selectedGroupSignal.on.push({
-        events: `@${name}:click`,
-        update: `datum.set_id`, // This is the set name
-      });
-    }
-  }
+	// If we have popovers, add a click handler to update selectedGroup
+	if (popovers.length) {
+		const selectedGroupSignal = signals.find((signal) => signal.name === SELECTED_GROUP);
+		if (selectedGroupSignal) {
+			if (!selectedGroupSignal.on) {
+				selectedGroupSignal.on = [];
+			}
+			selectedGroupSignal.on.push({
+				events: `@${name}:click`,
+				update: `datum.set_id`, // This is the set name
+			});
+		}
+	}
 
-  if (!hasInteractiveChildren(children)) return;
-  addHighlightedItemSignalEvents(signals, name, idKey, 1, getTooltipProps(children)?.excludeDataKeys);
-  addHighlightedSeriesSignalEvents(signals, name, 1);
+	if (!hasInteractiveChildren(children)) return;
+	addHighlightedItemSignalEvents(signals, name, idKey, 1, getTooltipProps(children)?.excludeDataKeys);
+	addHighlightedItemSignalEvents(
+		signals,
+		`${name}_intersections`,
+		idKey,
+		1,
+		getTooltipProps(children)?.excludeDataKeys
+	);
+	addHighlightedSeriesSignalEvents(signals, name, 1);
+	addHighlightedSeriesSignalEvents(signals, `${name}_intersections`, 1);
 });

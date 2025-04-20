@@ -23,86 +23,65 @@ import { Content } from '@adobe/react-spectrum';
 import { ChartProps, Datum, VennProps } from '../../../types';
 
 export default {
-  title: 'RSC/Venn',
-  component: Venn,
+	title: 'RSC/Venn',
+	component: Venn,
 };
 
 const defaultChartProps: ChartProps = {
-  data: [
-    { regions: ['A'], radius: 12 },
-    { regions: ['B'], radius: 12 },
-    { regions: ['C'], radius: 12 },
-    { regions: ['A', 'B'], radius: 2 },
-    { regions: ['A', 'C'], radius: 2 },
-    { regions: ['B', 'C'], radius: 2 },
-    { regions: ['A', 'B', 'C'], radius: 1 },
-  ],
+	data: [
+		{ regions: ['A'], radius: 12 },
+		{ regions: ['B'], radius: 12 },
+		{ regions: ['C'], radius: 12 },
+		{ regions: ['A', 'B'], radius: 2 },
+		{ regions: ['A', 'C'], radius: 2 },
+		{ regions: ['B', 'C'], radius: 2 },
+		{ regions: ['A', 'B', 'C'], radius: 1 },
+	],
 
-  height: 350,
-  width: 350,
+	height: 370,
+	width: 350,
 };
 
 const BasicVennStory: StoryFn<VennProps> = (args) => {
-  const chartProps = useChartProps({ ...defaultChartProps });
-  return (
-    <Chart {...chartProps} debug>
-      <Venn orientation={Math.PI / 2} {...args} metric="radius" setField="regions" />
-    </Chart>
-  );
+	const chartProps = useChartProps({ ...defaultChartProps });
+	return (
+		<Chart {...chartProps} debug>
+			<Venn orientation={Math.PI / 2} {...args} metric="radius" setField="regions" />
+		</Chart>
+	);
 };
 
 const VennStoryWithLegend: StoryFn<VennProps> = (args) => {
-  const chartProps = useChartProps({ ...defaultChartProps });
-  return (
-    <Chart {...chartProps} debug>
-      <Venn orientation={Math.PI / 2} {...args} metric="radius" setField="regions" />
-      <Legend highlight />
-    </Chart>
-  );
+	const chartProps = useChartProps({ ...defaultChartProps });
+	return (
+		<Chart {...chartProps} debug>
+			<Venn orientation={Math.PI / 2} {...args} metric="radius" setField="regions" />
+			<Legend highlight />
+		</Chart>
+	);
 };
 
 const dialogContent = (datum: Datum) => {
-  return (
-    <Content>
-      <div>{datum['set_id']}</div>
-    </Content>
-  );
+	return (
+		<Content>
+			<div>{datum['set_id']}</div>
+		</Content>
+	);
 };
 
-const interactiveChildren = [<ChartTooltip key={0}>{dialogContent}</ChartTooltip>];
+const interactiveChildren = [
+	<ChartTooltip key={0}>{dialogContent}</ChartTooltip>,
+	<ChartPopover key={1}>{dialogContent}</ChartPopover>,
+];
 
 const VennStory: StoryFn<VennProps> = (args) => {
-  const chartProps = useChartProps({ ...defaultChartProps });
-  return (
-    <Chart {...chartProps} debug>
-      <Venn orientation={-Math.PI / 2} {...args} metric="radius" setField="regions">
-        <ChartTooltip />
-        <ChartPopover>
-          {(datum) => (
-            <Content>
-              {datum.sets ? (
-                // Intersection
-                <>
-                  <h3 style={{ margin: '0 0 8px 0' }}>Intersection</h3>
-                  <div>Sets: {datum.sets}</div>
-                  <hr style={{ margin: '8px 0' }} />
-                  <div>Size: {datum.radius || datum.size}</div>
-                </>
-              ) : (
-                // Single set
-                <>
-                  <h3 style={{ margin: '0 0 8px 0' }}>Set {datum.set}</h3>
-                  <hr style={{ margin: '8px 0' }} />
-                  <div>Size: {Math.sqrt(datum.size / 2)}</div>
-                </>
-              )}
-            </Content>
-          )}
-        </ChartPopover>
-      </Venn>
-      <Legend highlight />
-    </Chart>
-  );
+	const chartProps = useChartProps({ ...defaultChartProps });
+	return (
+		<Chart {...chartProps} debug>
+			<Venn orientation={-Math.PI / 2} {...args} metric="radius" setField="regions"></Venn>
+			<Legend highlight />
+		</Chart>
+	);
 };
 
 const Basic = bindWithProps(BasicVennStory);
@@ -111,14 +90,14 @@ const WithLegend = bindWithProps(VennStoryWithLegend);
 
 const WithToolTip = bindWithProps(BasicVennStory);
 WithToolTip.args = {
-  children: interactiveChildren,
+	children: interactiveChildren[0],
 };
 
 const popoverContent = [<ChartTooltip key={0} />];
 
 const WithPopover = bindWithProps(VennStory);
 WithPopover.args = {
-  children: popoverContent,
+	children: interactiveChildren,
 };
 
 export { Basic, WithToolTip, WithPopover, WithLegend };
