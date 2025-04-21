@@ -18,7 +18,7 @@ import { DEFAULT_FIELD_SET, VENN_DEFAULT_STYLES } from '@specBuilder/venn/vennDe
 import { VennProps } from '../../types';
 
 const Venn: FC<VennProps> = ({
-  orientation = Math.PI,
+  orientation = 0,
   setField = DEFAULT_FIELD_SET,
   metric = 'size',
   style = VENN_DEFAULT_STYLES,

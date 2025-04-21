@@ -62,7 +62,7 @@ export const addVenn = produce<
 	(
 		spec,
 		{
-			orientation = Math.PI,
+			orientation = 0,
 			name,
 			metric = DEFAULT_METRIC,
 			children,
@@ -149,9 +149,9 @@ export const addMarks = produce<Mark[], [VennSpecProps]>((marks, props) => {
 	const popovers = getPopovers(props);
 
 	marks.push(getCircleMark(props, popovers));
-	marks.push(getTextMark(props, 'circles'), getTextMark(props, 'intersections'));
 	marks.push(getStrokeMark(props));
 	marks.push(getInterserctionMark(props, popovers));
+	marks.push(getTextMark(props, 'circles'), getTextMark(props, 'intersections'));
 });
 
 export const addScales = produce<Scale[]>((scales) => {
