@@ -48,8 +48,7 @@ export const getVennSolution = (props: VennSpecProps) => {
 		let solution = venn(test);
 
 		if (orientation !== undefined) {
-			const order = { A: 1, B: 3, C: 3 };
-			solution = normalizeSolution(solution, orientation, (a, b) => order[a.setid] - order[b.setid]);
+			solution = normalizeSolution(solution, orientation) 
 		}
 
 		circles = scaleSolution(solution, props.chartWidth, props.chartHeight / 1.4, props.style.padding);
