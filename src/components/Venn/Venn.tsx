@@ -13,7 +13,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC } from 'react';
 
-import { DEFAULT_FIELD_SET, VENN_DEFAULT_STYLES } from '@specBuilder/venn/vennDefaults';
+import { DEFAULT_FIELD_SET, DEFAULT_LABEL, VENN_DEFAULT_STYLES } from '@specBuilder/venn/vennDefaults';
 
 import { VennProps } from '../../types';
 
@@ -22,6 +22,7 @@ const Venn: FC<VennProps> = ({
   setField = DEFAULT_FIELD_SET,
   metric = 'size',
   style = VENN_DEFAULT_STYLES,
+  label = DEFAULT_LABEL
 }) => {
   return null;
 };

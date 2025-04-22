@@ -39,7 +39,7 @@ const defaultChartProps: ChartProps = {
 	data: [
 		{ regions: [A], radius: 12 },
 		{ regions: [B], radius: 12 },
-		{ regions: [C], radius: 12 },
+		{ regions: [C], radius: 6 },
 		{ regions: [A, B], radius: 2 },
 		{ regions: [A, C], radius: 2 },
 		{ regions: [B, C], radius: 2 },

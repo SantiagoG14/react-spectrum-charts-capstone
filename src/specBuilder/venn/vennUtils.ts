@@ -51,7 +51,10 @@ export const getVennSolution = (props: VennSpecProps) => {
 			solution = normalizeSolution(solution, orientation) 
 		}
 
-		circles = scaleSolution(solution, props.chartWidth, props.chartHeight / 1.4, props.style.padding);
+    // divide the width by a small amount so that the venn does not overflow
+    // and devide height so that venn is the the height of the entire 
+    // height of the chart
+		circles = scaleSolution(solution, props.chartWidth / 1.01, props.chartHeight / 1.4, props.style.padding);
 		textCenters = computeTextCentres(circles, test);
 	}
 
