@@ -21,6 +21,6 @@ export const VENN_DEFAULT_STYLES = {
 
 export const SET_ID_DELIMITER = '∩';
 
-export const DEFAULT_FIELD_SET= 'sets'
-export const DEFAULT_LABEL = 'label'
-
+export const DEFAULT_VENN_COLOR = 'sets';
+export const DEFAULT_VENN_METRIC = 'size';
+export const DEFAULT_LABEL = 'label';

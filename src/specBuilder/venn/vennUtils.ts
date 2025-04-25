@@ -45,15 +45,15 @@ export const getVennSolution = (props: VennSpecProps) => {
 	let textCenters: TextCenterRecord = {};
 
 	if (test.length > 0) {
-		let solution = venn(test);
+		let solution = venn(test, { layout: 'greedy', seed: 0.0013 });
 
 		if (orientation !== undefined) {
-			solution = normalizeSolution(solution, orientation) 
+			solution = normalizeSolution(solution, orientation);
 		}
 
-    // divide the width by a small amount so that the venn does not overflow
-    // and devide height so that venn is the the height of the entire 
-    // height of the chart
+		// divide the width by a small amount so that the venn does not overflow
+		// and devide height so that venn is the the height of the entire
+		// height of the chart
 		circles = scaleSolution(solution, props.chartWidth / 1.01, props.chartHeight / 1.4, props.style.padding);
 		textCenters = computeTextCentres(circles, test);
 	}
@@ -62,13 +62,13 @@ export const getVennSolution = (props: VennSpecProps) => {
 		// we join by comma here to because its the output of venn-helper
 		const setName = datum.sets.join(',');
 		// Added size to the intersection data
-		const { x: textX, y: textY } = textCenters[setName];
+		const { x: textX, y: textY, disjoint } = textCenters[setName];
 		return {
 			set_id: datum.sets.join(SET_ID_DELIMITER),
 			sets: datum.sets,
 			path: intersectionAreaPath(datum.sets.map((set) => circles[set])),
-			textY,
-			textX,
+			textY: disjoint ? undefined : textX,
+			textX: disjoint ? undefined: textY,
 			size: datum.size,
 		};
 	});
@@ -89,7 +89,7 @@ export const getVennSolution = (props: VennSpecProps) => {
 };
 
 function mapDataForVennHelper(props: VennSpecProps): VennHelperProps[] {
-	const { data, metric, setField } = props;
+	const { data, metric, color } = props;
 	const unsafeData = data as unknown as Record<string, unknown>[];
 
 	const parsed = unsafeData
@@ -101,17 +101,17 @@ function mapDataForVennHelper(props: VennSpecProps): VennHelperProps[] {
 					res.size = datum[metric] as string;
 				}
 
-				if (!res[metric]) {
+				if (res[metric] === undefined) {
 					throw new Error("set the metric prop to the default 'size' or set your own");
 				}
 			}
 
-			if (setField) {
-				if (typeof isArray(res[setField])) {
-					res.sets = structuredClone(datum[setField]) as string[];
+			if (color) {
+				if (typeof isArray(res[color])) {
+					res.sets = structuredClone(datum[color]) as string[];
 				}
 
-				if (!res[setField]) {
+				if (res[color] === undefined) {
 					throw new Error("set the setField prop to the default 'sets' or set your own");
 				}
 			}
@@ -188,11 +188,11 @@ export const getTextMark = (props: VennSpecProps, dataSource: 'circles' | 'inter
 		interactive: false,
 		encode: {
 			enter: {
-				x: { field: 'textX' },
+				x: { field: 'textX', },
 				y: { field: 'textY' },
 				text: { field: `table_data.${label}` },
 				fontSize: { value: style.fontSize },
-        opacity: getMarkOpacity(props),
+				opacity: getMarkOpacity(props),
 				fill: { value: style.color },
 				fontWeight: { value: style?.fontWeight },
 				align: { value: 'center' },

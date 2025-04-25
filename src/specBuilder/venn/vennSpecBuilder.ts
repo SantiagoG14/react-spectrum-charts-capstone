@@ -12,9 +12,7 @@
 import {
 	COLOR_SCALE,
 	COMPONENT_NAME,
-	DEFAULT_COLOR,
 	DEFAULT_COLOR_SCHEME,
-	DEFAULT_METRIC,
 	SELECTED_GROUP,
 	TABLE,
 } from '@constants';
@@ -31,7 +29,7 @@ import { Data, FilterTransform, FormulaTransform, LookupTransform, Mark, Scale, 
 
 import type { ChartData, ColorScheme, HighlightedItem, VennSpecProps } from '../../types';
 import { VennProps } from '../../types';
-import { DEFAULT_FIELD_SET, DEFAULT_LABEL, SET_ID_DELIMITER, VENN_DEFAULT_STYLES } from './vennDefaults';
+import { DEFAULT_VENN_COLOR, DEFAULT_LABEL, SET_ID_DELIMITER, VENN_DEFAULT_STYLES, DEFAULT_VENN_METRIC } from './vennDefaults';
 import {
 	getCircleMark,
 	getInteractiveMarkName,
@@ -64,10 +62,10 @@ export const addVenn = produce<
 		{
 			orientation = 0,
 			name,
-			metric = DEFAULT_METRIC,
+			metric = DEFAULT_VENN_METRIC,
 			children,
 			index = 0,
-			color = DEFAULT_COLOR,
+			color = DEFAULT_VENN_COLOR,
 			colorScheme = DEFAULT_COLOR_SCHEME,
 			data,
 			idKey = 'set_id',
@@ -75,7 +73,6 @@ export const addVenn = produce<
 			chartHeight = 100,
 			style = VENN_DEFAULT_STYLES,
 			label = DEFAULT_LABEL,
-			setField = DEFAULT_FIELD_SET,
 			...props
 		}
 	) => {
@@ -85,7 +82,6 @@ export const addVenn = produce<
 			dimension: 'venn',
 			markType: 'venn',
 			index,
-			setField,
 			colorScheme,
 			color,
 			label,
@@ -162,12 +158,12 @@ export const getTableTransforms = (props: VennSpecProps): (FormulaTransform | Fi
 	{
 		type: 'formula',
 		as: 'set_id',
-		expr: `join(datum.${props.setField}, '${SET_ID_DELIMITER}')`,
+		expr: `join(datum.${props.color}, '${SET_ID_DELIMITER}')`,
 	},
 	{
 		type: 'formula',
 		as: 'set_legend',
-		expr: `length(datum.${props.setField}) > 1 ? datum.${props.setField}[0]: join(datum.${props.setField}, '${SET_ID_DELIMITER}')`,
+		expr: `length(datum.${props.color}) > 1 ? datum.${props.color}[0]: join(datum.${props.color}, '${SET_ID_DELIMITER}')`,
 	},
 ];
 

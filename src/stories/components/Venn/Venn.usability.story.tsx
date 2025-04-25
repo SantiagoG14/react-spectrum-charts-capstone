@@ -30,7 +30,7 @@ export default {
 const defaultChartProps: ChartProps = {
 	data: [
 		{ regions: ['A'], radius: 6, percentage: '50%', label: 'A' },
-		{ regions: ['B'], radius: 6, percentage: '50%', label: 'B' },
+		{ regions: ['B'], radius: 5, percentage: '50%', label: 'B' },
 		{ regions: ['A', 'B'], radius: 1, percentage: '20%' },
 	],
 
@@ -42,7 +42,7 @@ const BasicVennStory: StoryFn<VennProps> = (args) => {
 	const chartProps = useChartProps({ ...defaultChartProps });
 	return (
 		<Chart {...chartProps} debug>
-			<Venn {...args} orientation={Math.PI / 2} metric="radius" setField="regions">
+			<Venn {...args} orientation={Math.PI / 2} metric="radius" color="regions">
 				<ChartTooltip>
 					{(datum) => (
 						<Content>

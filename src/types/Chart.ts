@@ -409,8 +409,6 @@ export interface MarkProps extends BaseProps {
 export interface VennProps extends MarkProps {
 	/** orientation of the diagram in polar coordinates */
 	orientation?: number;
-	/** key in data that is used for reading the sets of the venn */
-	setField?: string;
 
 	/** key in data that is used for labels inside the sets and intersections*/
 	label?: string;

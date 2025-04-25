@@ -12700,10 +12700,10 @@ vega@^5.29.0:
     vega-voronoi "~4.2.2"
     vega-wordcloud "~4.1.4"
 
-venn-helper@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/venn-helper/-/venn-helper-2.2.0.tgz#6371ce53bfdff2b8fb1a89566ea8403e19ac6db0"
-  integrity sha512-KYx4U+pvtXTuXGsQqVej9VG2pQ4XQSkBhY1R6fm9geysONADtjwS7aTo6SDHlPjamiMczvRrkvCO0pE2xxchrA==
+venn-helper@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/venn-helper/-/venn-helper-2.3.1.tgz#d9da8b8beb9f11b1d44274c8114c9025089815ba"
+  integrity sha512-s1+wJc32UZ9WF4JOnard9k9GemLs+E24Twfr6Jxqtc4n3VrBKHA5R72TBULFOK7E8QbTrlEj9pPnWLjniCPrVQ==
   dependencies:
     fmin "0.0.2"
 
