@@ -65,7 +65,7 @@ const VennStoryWithLegend: StoryFn<VennProps> = (args) => {
   return (
     <Chart {...chartProps} debug config={{ autosize: { type: 'pad' } }}>
       <Venn {...args} metric="radius" color="regions" />
-      <Legend highlight />
+      <Legend highlight isToggleable/>
     </Chart>
   );
 };

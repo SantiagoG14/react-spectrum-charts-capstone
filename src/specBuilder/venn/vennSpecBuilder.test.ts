@@ -29,13 +29,16 @@ describe('addData', () => {
 		expect(data[0].transform?.[1]).toHaveProperty('as', 'set_id');
 		expect(data[0].transform?.[2]).toHaveProperty('as', 'set_legend');
 
-		expect(data[2].transform).toHaveLength(4);
-		expect(data[2].transform?.[0]).toHaveProperty('type', 'formula');
-		expect(data[2].transform?.[0]).toHaveProperty('as', 'strokeSize');
+		expect(data[2].transform).toHaveLength(5);
 
-		expect(data[2].transform?.[1]).toHaveProperty('type', 'lookup');
-		expect(data[2].transform?.[1]).toHaveProperty('key', 'set_id');
-		expect(data[2].transform?.[1]).toHaveProperty('from', TABLE);
+		expect(data[2].transform?.[0]).toHaveProperty('type', 'lookup');
+		expect(data[2].transform?.[0]).toHaveProperty('key', 'set_id');
+		expect(data[2].transform?.[0]).toHaveProperty('from', TABLE);
+
+		expect(data[2].transform?.[3]).toHaveProperty('type', 'formula');
+		expect(data[2].transform?.[3]).toHaveProperty('as', 'strokeSize');
+
+		expect(data[2].transform?.[4]).toHaveProperty('type', 'filter');
 
 		expect(data[3].transform).toHaveLength(3);
 		expect(data[3].transform?.[0]).toHaveProperty('type', 'lookup');

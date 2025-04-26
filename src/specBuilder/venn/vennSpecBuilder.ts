@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { COLOR_SCALE, COMPONENT_NAME, DEFAULT_COLOR_SCHEME, TABLE } from '@constants';
+import { COLOR_SCALE, DEFAULT_COLOR_SCHEME, TABLE } from '@constants';
 import { getPopovers } from '@specBuilder/chartPopover/chartPopoverUtils';
 import { getTooltipProps, hasInteractiveChildren } from '@specBuilder/marks/markUtils';
 import { addFieldToFacetScaleDomain } from '@specBuilder/scale/scaleSpecBuilder';
@@ -110,8 +110,9 @@ export const addData = produce<Data[], [VennSpecProps]>((data, props) => {
 		name: 'circles',
 		values: circles,
 		transform: [
-			{ type: 'formula', as: 'strokeSize', expr: 'datum.size * 1' },
 			...getTableJoinTransforms(),
+			{ type: 'formula', as: 'strokeSize', expr: 'datum.size * 1' },
+			{ type: 'filter', expr: 'indexof(hiddenSeries, datum.table_data.rscSeriesId) === -1' },
 		],
 	});
 
