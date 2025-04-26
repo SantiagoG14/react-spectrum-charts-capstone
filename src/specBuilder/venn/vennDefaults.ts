@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { VennProps } from '../../types';
+import { VennDegreeOptions, VennProps } from '../../types';
 
 export const VENN_DEFAULT_STYLES = {
   fontSize: 16,
@@ -24,3 +24,13 @@ export const SET_ID_DELIMITER = '∩';
 export const DEFAULT_VENN_COLOR = 'sets';
 export const DEFAULT_VENN_METRIC = 'size';
 export const DEFAULT_LABEL = 'label';
+
+
+// the convertion here does not match to real math
+// however its the orientations that work for venn-helper
+export const degreesToRadians = new Map<VennDegreeOptions, number>([
+  ['0deg', Math.PI / 2],
+  ['90deg', 0],
+  ['180deg', -Math.PI / 2],
+  ['270deg', -Math.PI],
+]);

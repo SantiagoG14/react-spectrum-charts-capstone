@@ -19,9 +19,9 @@ import { bindWithProps } from '@test-utils';
 import { Chart } from 'Chart';
 
 import { Content } from '@adobe/react-spectrum';
+import { radioData } from './venn-radio-data';
 
 import { ChartProps, Datum, VennProps } from '../../../types';
-import { radioData } from './venn-radio-data';
 
 export default {
   title: 'RSC/Venn',
@@ -33,8 +33,6 @@ const { A, B, C } = {
   B: 'TikTok',
   C: 'X',
 };
-
-//const formatShort = new Intl.NumberFormat('en-US', { notation: 'compact', compactDisplay: 'short' });
 
 const defaultChartProps: ChartProps = {
   data: [
@@ -56,8 +54,8 @@ const defaultChartProps: ChartProps = {
 const BasicVennStory: StoryFn<VennProps> = (args) => {
   const chartProps = useChartProps({ ...defaultChartProps });
   return (
-    <Chart {...chartProps} debug>
-      <Venn {...args} metric="radius" color="regions" orientation={Math.PI / 2} />
+    <Chart {...chartProps} debug config={{ autosize: { type: 'pad' } }} >
+      <Venn {...args} metric="radius" color="regions" />
     </Chart>
   );
 };
@@ -65,8 +63,8 @@ const BasicVennStory: StoryFn<VennProps> = (args) => {
 const VennStoryWithLegend: StoryFn<VennProps> = (args) => {
   const chartProps = useChartProps({ ...defaultChartProps });
   return (
-    <Chart {...chartProps} debug>
-      <Venn {...args} metric="radius" color="regions" orientation={0} />
+    <Chart {...chartProps} debug config={{ autosize: { type: 'pad' } }}>
+      <Venn {...args} metric="radius" color="regions" />
       <Legend highlight />
     </Chart>
   );
@@ -74,8 +72,8 @@ const VennStoryWithLegend: StoryFn<VennProps> = (args) => {
 
 const SupremeStory: StoryFn<VennProps> = (args) => {
   return (
-    <Chart data={radioData} height={600} width={600} debug>
-      <Venn {...args} orientation={Math.PI / 2} style={{ padding: 16 }} />
+    <Chart data={radioData} height={650} width={650} debug config={{ autosize: { type: 'pad' } }}>
+      <Venn {...args} />
     </Chart>
   );
 };
@@ -93,16 +91,6 @@ const interactiveChildren = [
   <ChartPopover key={1}>{dialogContent}</ChartPopover>,
 ];
 
-const VennStory: StoryFn<VennProps> = (args) => {
-  const chartProps = useChartProps({ ...defaultChartProps });
-  return (
-    <Chart {...chartProps} debug>
-      <Venn {...args} metric="radius" color="regions" orientation={Math.PI / 2}></Venn>
-      <Legend highlight />
-    </Chart>
-  );
-};
-
 const Basic = bindWithProps(BasicVennStory);
 
 const WithLegend = bindWithProps(VennStoryWithLegend);
@@ -114,7 +102,7 @@ WithToolTip.args = {
   children: interactiveChildren[0],
 };
 
-const WithPopover = bindWithProps(VennStory);
+const WithPopover = bindWithProps(VennStoryWithLegend);
 WithPopover.args = {
   children: interactiveChildren,
 };
