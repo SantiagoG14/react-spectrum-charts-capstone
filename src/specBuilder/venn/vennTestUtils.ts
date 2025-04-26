@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { VennSpecProps } from '../../types';
-import { DEFAULT_VENN_COLOR, DEFAULT_VENN_METRIC, DEFAULT_VENN_STYLES } from './vennDefaults';
+import { DEFAULT_VENN_STYLES } from './vennDefaults';
 
 const { A, B, C } = {
 	A: 'Instagram',
@@ -44,7 +44,6 @@ export const defaultVennProps: VennSpecProps = {
 	orientation: '0deg',
 	name: 'venn',
 	label: 'label',
-	color: "regions",
-	metric: "radius"
+	color: 'regions',
+	metric: 'radius',
 };
-

@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 import { COLOR_SCALE, DEFAULT_COLOR_SCHEME, TABLE } from '@constants';
-import { getPopovers } from '@specBuilder/chartPopover/chartPopoverUtils';
 import { getTooltipProps, hasInteractiveChildren } from '@specBuilder/marks/markUtils';
 import { addFieldToFacetScaleDomain } from '@specBuilder/scale/scaleSpecBuilder';
 import { addHighlightedItemSignalEvents } from '@specBuilder/signal/signalSpecBuilder';
@@ -29,9 +28,7 @@ import {
 } from './vennDefaults';
 import {
 	getCircleMark,
-	getInteractiveMarkName,
 	getInterserctionMark,
-	getPopoverMarkName,
 	getSelectedCircleMark,
 	getStrokeMark,
 	getTextMark,
@@ -48,8 +45,6 @@ export const addVenn = produce<
 			index?: number;
 			idKey: string;
 			data: ChartData[];
-			interactiveMarkName?: string;
-			popoverMarkName?: string;
 			chartWidth?: number | undefined;
 			chartHeight?: number | undefined;
 		}
@@ -83,14 +78,8 @@ export const addVenn = produce<
 			color,
 			label,
 			orientation,
-			data: data,
+			data,
 			metric,
-			interactiveMarkName: getInteractiveMarkName(
-				sanitizeMarkChildren(children),
-				toCamelCase(name ?? `venn${index}`),
-				props.highlightedItem
-			),
-			popoverMarkName: getPopoverMarkName(sanitizeMarkChildren(children), toCamelCase(name ?? `venn${index}`)),
 			chartHeight,
 			chartWidth,
 			style: mergeStylesWithDefaults(style),
@@ -128,12 +117,10 @@ export const addData = produce<Data[], [VennSpecProps]>((data, props) => {
 });
 
 export const addMarks = produce<Mark[], [VennSpecProps]>((marks, props) => {
-	const popovers = getPopovers(props);
-
 	marks.push(getStrokeMark(props));
-	marks.push(getCircleMark(props, popovers));
+	marks.push(getCircleMark(props));
 	marks.push(getSelectedCircleMark(props));
-	marks.push(getInterserctionMark(props, popovers));
+	marks.push(getInterserctionMark(props));
 	marks.push(getTextMark(props, 'circles'), getTextMark(props, 'intersections'));
 });
 
