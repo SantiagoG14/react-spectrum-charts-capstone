@@ -29,7 +29,7 @@ import {
 } from 'venn-helper';
 
 import { ChartPopoverSpecProps, HighlightedItem, MarkChildElement, VennProps, VennSpecProps } from '../../types';
-import { SET_ID_DELIMITER, VENN_DEFAULT_STYLES, degreesToRadians } from './vennDefaults';
+import { SET_ID_DELIMITER, DEFAULT_VENN_STYLES, degreesToRadians } from './vennDefaults';
 
 type VennHelperProps = {
   sets: string[];
@@ -131,11 +131,11 @@ function mapDataForVennHelper(props: VennSpecProps): VennHelperProps[] {
 
 export function mergeStylesWithDefaults(style: VennProps['style']) {
   return {
-    fontSize: style?.fontSize ?? VENN_DEFAULT_STYLES.fontSize,
-    padding: style?.padding ?? VENN_DEFAULT_STYLES.padding,
-    fontWeight: style?.fontWeight ?? VENN_DEFAULT_STYLES.fontWeight,
-    intersectionFill: style?.intersectionFill ?? VENN_DEFAULT_STYLES.intersectionFill,
-    color: style?.color ?? VENN_DEFAULT_STYLES.color,
+    fontSize: style?.fontSize ?? DEFAULT_VENN_STYLES.fontSize,
+    padding: style?.padding ?? DEFAULT_VENN_STYLES.padding,
+    fontWeight: style?.fontWeight ?? DEFAULT_VENN_STYLES.fontWeight,
+    intersectionFill: style?.intersectionFill ?? DEFAULT_VENN_STYLES.intersectionFill,
+    color: style?.color ?? DEFAULT_VENN_STYLES.color,
   } satisfies Required<VennProps['style']>;
 }
 

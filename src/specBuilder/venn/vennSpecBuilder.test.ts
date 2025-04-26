@@ -9,4 +9,79 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import { createElement } from 'react';
 
+import { ChartTooltip } from '@components/ChartTooltip';
+import { COLOR_SCALE, HIGHLIGHTED_ITEM, TABLE } from '@constants';
+import { defaultSignals } from '@specBuilder/specTestUtils';
+import { initializeSpec } from '@specBuilder/specUtils';
+
+import { addData, addMarks, addScales, addSignals, addVenn } from './vennSpecBuilder';
+import { defaultVennProps, data as vennData } from './vennTestUtils';
+
+describe('addData', () => {
+	test('should add data correctly to tables circles, intersections and table', () => {
+		const data = addData(initializeSpec({}, { data: vennData }).data ?? [], defaultVennProps);
+
+		expect(data).toHaveLength(4);
+		expect(data[0].transform).toHaveLength(3);
+		expect(data[0].transform?.[1]).toHaveProperty('type', 'formula');
+		expect(data[0].transform?.[1]).toHaveProperty('as', 'set_id');
+		expect(data[0].transform?.[2]).toHaveProperty('as', 'set_legend');
+
+		expect(data[2].transform).toHaveLength(4);
+		expect(data[2].transform?.[0]).toHaveProperty('type', 'formula');
+		expect(data[2].transform?.[0]).toHaveProperty('as', 'strokeSize');
+
+		expect(data[2].transform?.[1]).toHaveProperty('type', 'lookup');
+		expect(data[2].transform?.[1]).toHaveProperty('key', 'set_id');
+		expect(data[2].transform?.[1]).toHaveProperty('from', TABLE);
+
+		expect(data[3].transform).toHaveLength(3);
+		expect(data[3].transform?.[0]).toHaveProperty('type', 'lookup');
+		expect(data[3].transform?.[0]).toHaveProperty('key', 'set_id');
+		expect(data[3].transform?.[0]).toHaveProperty('from', TABLE);
+	});
+});
+
+describe('addSignal', () => {
+	test('should add hover events when tooltip is present', () => {
+		const signals = addSignals(defaultSignals, {
+			...defaultVennProps,
+			children: [createElement(ChartTooltip)],
+		});
+
+		expect(signals).toHaveLength(defaultSignals.length);
+		expect(signals[0]).toHaveProperty('name', HIGHLIGHTED_ITEM);
+		expect(signals[0].on).toHaveLength(4);
+		expect(signals[0].on?.[0]).toHaveProperty('events', '@venn:mouseover');
+		expect(signals[0].on?.[1]).toHaveProperty('events', '@venn:mouseout');
+		expect(signals[0].on?.[2]).toHaveProperty('events', '@venn_intersections:mouseover');
+		expect(signals[0].on?.[3]).toHaveProperty('events', '@venn_intersections:mouseout');
+	});
+});
+
+describe('addScales', () => {
+	test('should add scales', () => {
+		const scales = addScales([]);
+		expect(scales).toHaveLength(1);
+		expect(scales[0]).toHaveProperty('name', COLOR_SCALE);
+	});
+});
+
+describe('donuteSpecBuilder', () => {
+	test('should add venn correctly', () => {
+		const props = defaultVennProps;
+		const spec = initializeSpec({}, { data: vennData }) ?? [];
+		const result = addVenn(spec, props);
+
+		const expectedSpec = {
+			data: addData(spec.data ?? [], props),
+			scales: addScales([]),
+			marks: addMarks([], props),
+			signals: addSignals([], props),
+		};
+
+		expect(result).toEqual(expectedSpec);
+	});
+});

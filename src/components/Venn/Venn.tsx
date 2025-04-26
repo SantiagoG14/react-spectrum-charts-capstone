@@ -13,14 +13,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FC } from 'react';
 
-import { DEFAULT_VENN_COLOR, DEFAULT_LABEL, VENN_DEFAULT_STYLES, DEFAULT_VENN_METRIC } from '@specBuilder/venn/vennDefaults';
+import { DEFAULT_VENN_COLOR, DEFAULT_LABEL, DEFAULT_VENN_STYLES, DEFAULT_VENN_METRIC } from '@specBuilder/venn/vennDefaults';
 
 import { VennProps } from '../../types';
 
 const Venn: FC<VennProps> = ({
   orientation = "0deg",
   metric = DEFAULT_VENN_METRIC,
-  style = VENN_DEFAULT_STYLES,
+  style = DEFAULT_VENN_STYLES,
   label = DEFAULT_LABEL,
   color = DEFAULT_VENN_COLOR
 }) => {

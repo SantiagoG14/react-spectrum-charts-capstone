@@ -11,7 +11,7 @@
  */
 import { VennDegreeOptions, VennProps } from '../../types';
 
-export const VENN_DEFAULT_STYLES = {
+export const DEFAULT_VENN_STYLES = {
   fontSize: 16,
   padding: 0,
   fontWeight: 'normal',
