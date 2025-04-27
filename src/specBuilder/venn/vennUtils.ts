@@ -88,7 +88,7 @@ export const getVennSolution = (props: VennSpecProps) => {
 	return { circles: circlesData, intersections, allIntersections };
 };
 
-function mapDataForVennHelper(props: VennSpecProps): VennHelperProps[] {
+export const mapDataForVennHelper = (props: VennSpecProps): VennHelperProps[] =>{
 	const { data, metric, color } = props;
 	const unsafeData = data as unknown as Record<string, unknown>[];
 
