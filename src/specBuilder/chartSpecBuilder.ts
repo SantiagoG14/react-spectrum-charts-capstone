@@ -9,7 +9,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import { Venn } from '@components/Venn';
 import {
 	BACKGROUND_COLOR,
 	FILTERED_TABLE,
@@ -30,7 +29,7 @@ import {
 	TABLE,
 } from '@constants';
 import { Area, Axis, Bar, Legend, Line, Scatter, Title } from '@rsc';
-import { Combo } from '@rsc/alpha';
+import { Combo, Venn } from '@rsc/alpha';
 import { BigNumber, Donut } from '@rsc/rc';
 import colorSchemes from '@themes/colorSchemes';
 import { produce } from 'immer';

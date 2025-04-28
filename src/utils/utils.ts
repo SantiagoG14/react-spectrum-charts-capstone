@@ -29,9 +29,8 @@ import {
 	Title,
 	Trendline,
 	TrendlineAnnotation,
-	Venn,
 } from '@rsc';
-import { Combo } from '@rsc/alpha';
+import { Combo, Venn } from '@rsc/alpha';
 import { BigNumber, Donut, DonutSummary, SegmentLabel } from '@rsc/rc';
 import { View } from 'vega';
 

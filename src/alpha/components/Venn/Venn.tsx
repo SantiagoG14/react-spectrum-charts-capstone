@@ -15,7 +15,8 @@ import { FC } from 'react';
 
 import { DEFAULT_VENN_COLOR, DEFAULT_LABEL, DEFAULT_VENN_STYLES, DEFAULT_VENN_METRIC } from '@specBuilder/venn/vennDefaults';
 
-import { VennProps } from '../../types';
+
+import { VennProps } from '../../../types';
 
 const Venn: FC<VennProps> = ({
   orientation = "0deg",

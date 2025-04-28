@@ -12,11 +12,11 @@
 import { ChartPopover } from '@components/ChartPopover';
 import { ChartTooltip } from '@components/ChartTooltip';
 import { Legend } from '@components/Legend';
-import { Venn } from '@components/Venn';
 import useChartProps from '@hooks/useChartProps';
 import { StoryFn } from '@storybook/react';
 import { bindWithProps } from '@test-utils';
 import { Chart } from 'Chart';
+import { Venn } from '@rsc/alpha';
 
 import { Content } from '@adobe/react-spectrum';
 
@@ -94,7 +94,9 @@ const dialogContent = (datum: Datum) => {
 
 const interactiveChildren = [
 	<ChartTooltip key={0}>{dialogContent}</ChartTooltip>,
-	<ChartPopover key={1} width="auto">{dialogContent}</ChartPopover>,
+	<ChartPopover key={1} width="auto">
+		{dialogContent}
+	</ChartPopover>,
 ];
 
 const Basic = bindWithProps(BasicVennStory);

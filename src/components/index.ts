@@ -27,4 +27,3 @@ export * from './Title';
 export * from './Trendline';
 export * from './TrendlineAnnotation';
 export * from './Scatter';
-export * from './Venn';
