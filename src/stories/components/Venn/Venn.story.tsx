@@ -94,7 +94,7 @@ const dialogContent = (datum: Datum) => {
 
 const interactiveChildren = [
 	<ChartTooltip key={0}>{dialogContent}</ChartTooltip>,
-	<ChartPopover key={1}>{dialogContent}</ChartPopover>,
+	<ChartPopover key={1} width="auto">{dialogContent}</ChartPopover>,
 ];
 
 const Basic = bindWithProps(BasicVennStory);

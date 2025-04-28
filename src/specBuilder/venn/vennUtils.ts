@@ -127,7 +127,7 @@ export function mergeStylesWithDefaults(style: VennProps['style']) {
 	return Object.assign(DEFAULT_VENN_STYLES, { ...style });
 }
 
-export const getSelectedCircleMark = (props: VennSpecProps): SymbolMark => {
+export const getCircleOverlays = (props: VennSpecProps): SymbolMark => {
 	const { name, colorScheme } = props;
 
 	return {
@@ -142,9 +142,7 @@ export const getSelectedCircleMark = (props: VennSpecProps): SymbolMark => {
 				size: { field: 'size' },
 				shape: { value: 'circle' },
 				fill: getColorProductionRule('set_id', colorScheme),
-			},
-			update: {
-				opacity: getMarkOpacity(props, 0),
+				fillOpacity: { value: 0.2 },
 			},
 		},
 	};

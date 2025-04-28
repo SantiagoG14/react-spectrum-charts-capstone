@@ -17,7 +17,7 @@ import { defaultVennProps, data as vennData } from './vennTestUtils';
 import {
 	getCircleMark,
 	getInterserctionMark,
-	getSelectedCircleMark,
+	getCircleOverlays,
 	getStrokeMark,
 	getTextMark,
 	getVennSolution,
@@ -155,7 +155,7 @@ describe('mergeStylesWithDefaults', () => {
 
 describe('getSelectedCircleMark', () => {
 	test('should return a full selected cirlce mark when given defaultVennProps', () => {
-		const selectedCircleMark = getSelectedCircleMark(defaultVennProps);
+		const selectedCircleMark = getCircleOverlays(defaultVennProps);
 
 		expect(selectedCircleMark).toBeDefined();
 		expect(selectedCircleMark).toHaveProperty('type', 'symbol');

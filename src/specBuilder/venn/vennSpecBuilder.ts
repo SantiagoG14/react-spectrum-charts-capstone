@@ -29,7 +29,7 @@ import {
 import {
 	getCircleMark,
 	getInterserctionMark,
-	getSelectedCircleMark,
+	getCircleOverlays,
 	getStrokeMark,
 	getTextMark,
 	getVennSolution,
@@ -119,7 +119,7 @@ export const addData = produce<Data[], [VennSpecProps]>((data, props) => {
 export const addMarks = produce<Mark[], [VennSpecProps]>((marks, props) => {
 	marks.push(getStrokeMark(props));
 	marks.push(getCircleMark(props));
-	marks.push(getSelectedCircleMark(props));
+	marks.push(getCircleOverlays(props));
 	marks.push(getInterserctionMark(props));
 	marks.push(getTextMark(props, 'circles'), getTextMark(props, 'intersections'));
 });
