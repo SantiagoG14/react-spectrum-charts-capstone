@@ -20,7 +20,13 @@ import { PathMark, SymbolMark, TextMark, isArray } from 'vega';
 import { computeTextCentres, intersectionAreaPath, normalizeSolution, scaleSolution, venn } from 'venn-helper';
 
 import { VennProps, VennSpecProps } from '../../types';
-import { DEFAULT_VENN_STYLES, SET_ID_DELIMITER, degreesToRadians } from './vennDefaults';
+import {
+	DEFAULT_VENN_COLOR,
+	DEFAULT_VENN_METRIC,
+	DEFAULT_VENN_STYLES,
+	SET_ID_DELIMITER,
+	degreesToRadians,
+} from './vennDefaults';
 
 type VennHelperProps = {
 	sets: string[];
@@ -41,7 +47,7 @@ export const getVennSolution = (props: VennSpecProps) => {
 
 	let solution = venn(safeData, { layout: 'greedy' });
 
-	if (orientation !== undefined) {
+	if (orientation !== '0deg') {
 		solution = normalizeSolution(solution, orientationInRadians);
 	}
 
@@ -79,7 +85,7 @@ export const getVennSolution = (props: VennSpecProps) => {
 	return { circles: circlesData, intersections };
 };
 
-export const mapDataForVennHelper = (props: VennSpecProps): VennHelperProps[] =>{
+export const mapDataForVennHelper = (props: VennSpecProps): VennHelperProps[] => {
 	const { data, metric, color } = props;
 	const unsafeData = data as unknown as Record<string, unknown>[];
 
@@ -88,22 +94,22 @@ export const mapDataForVennHelper = (props: VennSpecProps): VennHelperProps[] =>
 			const res = { ...datum };
 
 			if (metric) {
-				if (typeof res[metric] === 'number') {
-					res.size = datum[metric] as string;
-				}
-
 				if (res[metric] === undefined) {
 					throw new Error("set the metric prop to the default 'size' or set your own");
+				}
+
+				if (metric !== DEFAULT_VENN_METRIC && typeof res[metric] === 'number') {
+					res.size = datum[metric] as string;
 				}
 			}
 
 			if (color) {
-				if (typeof isArray(res[color])) {
-					res.sets = structuredClone(datum[color]) as string[];
-				}
-
 				if (res[color] === undefined) {
 					throw new Error("set the setField prop to the default 'sets' or set your own");
+				}
+
+				if (color !== DEFAULT_VENN_COLOR && typeof isArray(res[color])) {
+					res.sets = structuredClone(datum[color]) as string[];
 				}
 			}
 
@@ -115,16 +121,10 @@ export const mapDataForVennHelper = (props: VennSpecProps): VennHelperProps[] =>
 		.filter((datum) => datum.sets.length > 0);
 
 	return parsed;
-}
+};
 
 export function mergeStylesWithDefaults(style: VennProps['style']) {
-	return {
-		fontSize: style?.fontSize ?? DEFAULT_VENN_STYLES.fontSize,
-		padding: style?.padding ?? DEFAULT_VENN_STYLES.padding,
-		fontWeight: style?.fontWeight ?? DEFAULT_VENN_STYLES.fontWeight,
-		intersectionFill: style?.intersectionFill ?? DEFAULT_VENN_STYLES.intersectionFill,
-		color: style?.color ?? DEFAULT_VENN_STYLES.color,
-	} satisfies Required<VennProps['style']>;
+	return Object.assign(DEFAULT_VENN_STYLES, { ...style });
 }
 
 export const getSelectedCircleMark = (props: VennSpecProps): SymbolMark => {

@@ -12,15 +12,28 @@
 import { Venn } from '@components/Venn';
 import { findAllMarksByGroupName, findChart, render } from '@test-utils';
 
-import { Basic } from './Venn.story';
+import { Basic, WithLegend } from './Venn.story';
 
 describe('Venn', () => {
 	test('Venn pseudo element', () => {
 		render(<Venn />);
 	});
 
-	test('Basic renders properly', async () => {
+	test('Basic renders properly without passing props', async () => {
 		render(<Basic {...Basic.args} />);
+		const chart = await findChart();
+
+		expect(chart).toBeInTheDocument();
+
+		const circles = await findAllMarksByGroupName(chart, 'venn0');
+		expect(circles.length).toEqual(2);
+
+		const intersections = await findAllMarksByGroupName(chart, 'venn0_intersections');
+		expect(intersections.length).toEqual(1);
+	});
+
+	test('WithLegend renders properly', async () => {
+		render(<WithLegend {...WithLegend.args} />);
 		const chart = await findChart();
 
 		expect(chart).toBeInTheDocument();

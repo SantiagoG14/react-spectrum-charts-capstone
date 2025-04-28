@@ -279,7 +279,7 @@ export interface ReferenceLineSpecProps extends PartiallyRequired<ReferenceLineP
   name: string;
 }
 
-type VennPropsWithDefaults = 'orientation' | 'name' | 'label' | 'color';
+type VennPropsWithDefaults = 'orientation' | 'name' | 'label' | 'color' | 'metric';
 
 export interface VennSpecProps extends PartiallyRequired<VennProps, VennPropsWithDefaults> {
   children: MarkChildElement[];

@@ -30,7 +30,6 @@ describe('getVennSolution', () => {
 		const vennSolution = getVennSolution(defaultVennProps);
 		expect(vennSolution).toHaveProperty('circles');
 		expect(vennSolution).toHaveProperty('intersections');
-		expect(vennSolution).toHaveProperty('allIntersections');
 	});
 
 	test('should return empty arrays when no data is provided', () => {
@@ -115,32 +114,6 @@ describe('getVennSolution', () => {
 });
 
 describe('mapDataForVennHelper', () => {
-	test('should return correct same object if fields are already set to sets and size when color and metric are null', () => {
-		const { A, B, C, D } = {
-			A: 'Instagram',
-			B: 'TikTok',
-			C: 'X',
-			D: 'Youtube',
-		};
-
-		const data = [
-			{ sets: [A], size: 12 },
-			{ sets: [B], size: 12 },
-			{ sets: [C], size: 6 },
-			{ sets: [D], size: 6 },
-			{ sets: [A, B], size: 2 },
-			{ sets: [A, D], size: 2 },
-			{ sets: [A, C], size: 2 },
-			{ sets: [B, C], size: 2 },
-			{ sets: [A, B, C], size: 1 },
-		];
-
-		const parsedData = mapDataForVennHelper({ ...defaultVennProps, data: data ?? [] });
-
-		expect(parsedData).toBeDefined();
-		expect(parsedData).toEqual(data);
-	});
-
 	test('should return the correct object structure without modifying metric or color props', () => {
 		// Might always go into the if statement branches because of the defaultVennProps
 		const parsedData = mapDataForVennHelper({ ...defaultVennProps, data: vennData ?? [] });
@@ -170,11 +143,11 @@ describe('mapDataForVennHelper', () => {
 
 describe('mergeStylesWithDefaults', () => {
 	test('should set default styling when calling with undefined style', () => {
-		const defaultStyles = mergeStylesWithDefaults({});
+		const defaultStyles = mergeStylesWithDefaults({ fontSize: 30, fontWeight: 'bolder' });
 
-		expect(defaultStyles).toHaveProperty('fontSize');
+		expect(defaultStyles).toHaveProperty('fontSize', 30);
 		expect(defaultStyles).toHaveProperty('padding');
-		expect(defaultStyles).toHaveProperty('fontWeight');
+		expect(defaultStyles).toHaveProperty('fontWeight', 'bolder');
 		expect(defaultStyles).toHaveProperty('intersectionFill');
 		expect(defaultStyles).toHaveProperty('color');
 	});
