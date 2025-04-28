@@ -17,15 +17,7 @@ import {
 } from '@specBuilder/marks/markUtils';
 import { getColorValue } from '@specBuilder/specUtils';
 import { PathMark, SymbolMark, TextMark, isArray } from 'vega';
-import {
-	type CircleRecord,
-	type TextCenterRecord,
-	computeTextCentres,
-	intersectionAreaPath,
-	normalizeSolution,
-	scaleSolution,
-	venn,
-} from 'venn-helper';
+import { computeTextCentres, intersectionAreaPath, normalizeSolution, scaleSolution, venn } from 'venn-helper';
 
 import { VennProps, VennSpecProps } from '../../types';
 import { DEFAULT_VENN_STYLES, SET_ID_DELIMITER, degreesToRadians } from './vennDefaults';
@@ -43,20 +35,19 @@ export const getVennSolution = (props: VennSpecProps) => {
 	// safe to do casting since types in map and props are the same
 	const orientationInRadians = degreesToRadians.get(orientation) as number;
 
-	let circles: CircleRecord = {};
-	let textCenters: TextCenterRecord = {};
-
-	if (safeData.length > 0) {
-		let solution = venn(safeData, { layout: 'greedy' });
-
-		if (orientation !== undefined) {
-			solution = normalizeSolution(solution, orientationInRadians);
-		}
-
-		// divide the width by a small amount so that the venn does not overflow
-		circles = scaleSolution(solution, props.chartWidth / 1.01, props.chartHeight, props.style.padding);
-		textCenters = computeTextCentres(circles, safeData);
+	if (safeData.length === 0) {
+		return { circles: [], intersections: [] };
 	}
+
+	let solution = venn(safeData, { layout: 'greedy' });
+
+	if (orientation !== undefined) {
+		solution = normalizeSolution(solution, orientationInRadians);
+	}
+
+	// divide the width by a small amount so that the venn does not overflow
+	const circles = scaleSolution(solution, props.chartWidth / 1.01, props.chartHeight, props.style.padding);
+	const textCenters = computeTextCentres(circles, safeData);
 
 	const allIntersections = safeData.map((datum) => {
 		// we join by comma here to because its the output of venn-helper
@@ -85,7 +76,7 @@ export const getVennSolution = (props: VennSpecProps) => {
 		textY: textCenters[key].y,
 	}));
 
-	return { circles: circlesData, intersections, allIntersections };
+	return { circles: circlesData, intersections };
 };
 
 export const mapDataForVennHelper = (props: VennSpecProps): VennHelperProps[] =>{
