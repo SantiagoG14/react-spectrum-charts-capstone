@@ -11,6 +11,7 @@
  */
 
 
+import { ChartPopover } from '@components/ChartPopover';
 import { 
     defaultVennProps,
     data as vennData 
@@ -26,6 +27,7 @@ import {
     getInterserctionMark,
     getStrokeMark
 } from './vennUtils'
+import { createElement } from 'react';
 
 describe('getVennSolution', () => {
     test('should return the correct object structure with defaultVennProps', () => {
@@ -98,8 +100,7 @@ describe('getVennSolution', () => {
 
         expect(vennSolution.allIntersections).toContainEqual(firstIntersection);
         
-        // Check specific intersection properties if you know them
-        // For example, if you know intersection between sets A and B exists:
+        // Check specific intersection for instagram and X
         const abIntersection = vennSolution.intersections.find(
         i => i.sets.includes('Instagram') && i.sets.includes('X') && i.sets.length === 2
         );
@@ -118,10 +119,47 @@ describe('getVennSolution', () => {
         expect(vennSolution.intersections).toHaveLength(0);
         expect(vennSolution.allIntersections).toHaveLength(2);
     })
+
+    test('should correctly calculate circle size from radius', () => {
+        const vennSolution = getVennSolution({ ...defaultVennProps, data: vennData ?? [] });
+
+        vennSolution.circles.forEach(circle => {
+            expect(circle.size).toBeGreaterThan(0)
+        })
+    })
+
+    
 })
 
-// TO-DO: Maybe done since already going into branches to sanitize props for datum
 describe('mapDataForVennHelper', () => {
+
+    test('should return correct same object if fields are already set to sets and size when color and metric are null', () => {
+        const { A, B, C, D } = {
+            A: 'Instagram',
+            B: 'TikTok',
+            C: 'X',
+            D: 'Youtube'
+        };
+        
+        const data = [
+            { sets: [A], size: 12 },
+            { sets: [B], size: 12 },
+            { sets: [C], size: 6 },
+            { sets: [D], size: 6 },
+            { sets: [A, B], size: 2 },
+            { sets: [A, D], size: 2 },
+            { sets: [A, C], size: 2 },
+            { sets: [B, C], size: 2 },
+            { sets: [A, B, C], size: 1 },
+        ];
+        
+        const parsedData = mapDataForVennHelper({...defaultVennProps, data: data ?? [], color: null, metric: null})
+
+        expect(parsedData).toBeDefined()
+        expect(parsedData).toEqual(data)
+    })
+
+
     test('should return the correct object structure without modifying metric or color props', () => {
         
         // Might always go into the if statement branches because of the defaultVennProps
@@ -187,6 +225,20 @@ describe('getCircleMark', () => {
         expect(circleMark).toHaveProperty('from')
         expect(circleMark).toHaveProperty('encode')
     })
+
+    test('should return mark with cursor value pointer if there is an interactive child component present', () => {
+        const circleMark = getCircleMark({
+                    ...defaultVennProps,
+                    children: [createElement(ChartPopover)],
+        })
+
+        expect(circleMark).toBeDefined()
+        expect(circleMark).toHaveProperty('type', 'symbol')
+        expect(circleMark).toHaveProperty('name')
+        expect(circleMark).toHaveProperty('from')
+        expect(circleMark).toHaveProperty('encode')
+        expect(circleMark.encode?.update?.cursor).toHaveProperty('value', 'pointer')
+    })
 })
 
 describe('getTextMark', () => {
@@ -213,6 +265,21 @@ describe('getInterserctionMark', () => {
         expect(intersectionTextMark.from).toHaveProperty('data', 'intersections')
         expect(intersectionTextMark).toHaveProperty('name', 'venn_intersections')
         expect(intersectionTextMark).toHaveProperty('encode')
+    })
+
+    test('should return mark with cursor value pointer if there is an interactive child component present', () => {
+        const intersectionTextMark = getInterserctionMark({
+                    ...defaultVennProps,
+                    children: [createElement(ChartPopover)],
+        })
+
+        expect(intersectionTextMark).toBeDefined()
+        expect(intersectionTextMark).toHaveProperty('type', 'path')
+        expect(intersectionTextMark).toHaveProperty('from')
+        expect(intersectionTextMark.from).toHaveProperty('data', 'intersections')
+        expect(intersectionTextMark).toHaveProperty('name', 'venn_intersections')
+        expect(intersectionTextMark).toHaveProperty('encode')
+        expect(intersectionTextMark.encode?.update?.cursor).toHaveProperty('value', 'pointer')
     })
 })
 
