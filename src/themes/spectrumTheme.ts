@@ -32,7 +32,7 @@ export const ADOBE_CLEAN_FONT =
 export function getChartConfig(config: Config | undefined, colorScheme: ColorScheme): Config {
 	const defaultConfig = getSpectrumVegaConfig(colorScheme);
 	if (config) {
-		return mergeConfig(config, defaultConfig, config);
+		return mergeConfig(defaultConfig, config);
 	}
 	return defaultConfig;
 }

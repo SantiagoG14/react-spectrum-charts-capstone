@@ -60,7 +60,7 @@ const basicData = [
 const BasicVennStory: StoryFn<VennProps> = (args) => {
 	const chartProps = useChartProps({ ...defaultChartProps, data: basicData });
 	return (
-		<Chart {...chartProps} debug config={{ autosize: { type: 'pad' } }}>
+		<Chart {...chartProps} config={{ autosize: { type: 'pad' } }}>
 			<Venn {...args} />
 		</Chart>
 	);
@@ -69,7 +69,7 @@ const BasicVennStory: StoryFn<VennProps> = (args) => {
 const VennStoryWithLegend: StoryFn<VennProps> = (args) => {
 	const chartProps = useChartProps({ ...defaultChartProps });
 	return (
-		<Chart {...chartProps} debug config={{ autosize: { type: 'pad' } }}>
+		<Chart {...chartProps} config={{ autosize: { type: 'pad' } }}>
 			<Venn {...args} metric="radius" color="regions" />
 			<Legend highlight isToggleable />
 		</Chart>
@@ -78,7 +78,7 @@ const VennStoryWithLegend: StoryFn<VennProps> = (args) => {
 
 const SupremeStory: StoryFn<VennProps> = (args) => {
 	return (
-		<Chart data={radioData} height={650} width={650} debug config={{ autosize: { type: 'pad' } }}>
+		<Chart data={radioData} height={650} width={650} config={{ autosize: { type: 'pad' } }}>
 			<Venn {...args} />
 		</Chart>
 	);
@@ -104,6 +104,9 @@ const Basic = bindWithProps(BasicVennStory);
 const WithLegend = bindWithProps(VennStoryWithLegend);
 
 const Supreme = bindWithProps(SupremeStory);
+Supreme.args = {
+  children: interactiveChildren
+}
 
 const WithToolTip = bindWithProps(BasicVennStory);
 WithToolTip.args = {
