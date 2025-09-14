@@ -113,4 +113,20 @@ HorizontalSupreme.args = {
   position: 'center',
 };
 
-export { Basic, Icon, Label, Supreme, Horizontal, HorizontalIcon, HorizontalLabel, HorizontalSupreme };
+const ReferenceLineDashed = bindWithProps(ReferenceLineStory);
+ReferenceLineDashed.args = {
+  value: 3,
+  lineType: 'dashed',
+};
+
+export {
+  Basic,
+  Icon,
+  Label,
+  Supreme,
+  Horizontal,
+  HorizontalIcon,
+  HorizontalLabel,
+  HorizontalSupreme,
+  ReferenceLineDashed,
+};

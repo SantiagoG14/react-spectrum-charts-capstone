@@ -42,6 +42,7 @@ const defaultReferenceLineOptions: ReferenceLineSpecOptions = {
   labelFontWeight: DEFAULT_LABEL_FONT_WEIGHT,
   layer: 'front',
   name: 'axis0ReferenceLine0',
+  lineType: 'solid',
 };
 
 const defaultAxisOptions: AxisSpecOptions = {
@@ -165,7 +166,7 @@ describe('getReferenceLineRuleMark()', () => {
     const rule = getReferenceLineRuleMark(defaultAxisOptions, defaultReferenceLineOptions, defaultXPositionEncoding);
     expect(rule).toStrictEqual({
       encode: {
-        enter: { stroke: { value: spectrumColors.light['gray-900'] } },
+        enter: { stroke: { value: spectrumColors.light['gray-900'] }, strokeDash: { value: [] } },
         update: { x: defaultXPositionEncoding, y: { value: 0 }, y2: { signal: 'height + 0' } },
       },
       interactive: false,
@@ -342,36 +343,36 @@ describe('getReferenceLineTextMark()', () => {
 });
 
 describe('getReferenceLineLabelsEncoding()', () => {
-  test('should use a vertical offset of 48 if there is an icon', () => {
+  test('should use a vertical offset of 50 if there is an icon', () => {
     const encoding = getReferenceLineLabelsEncoding(
       defaultAxisOptions,
       { ...defaultReferenceLineOptions, icon: 'sentimentPositive', label: 'Hello world!' },
       defaultYPositionEncoding
     );
-    expect(encoding.update?.y).toHaveProperty('signal', 'height + 48');
+    expect(encoding.update?.y).toHaveProperty('signal', 'height + 50');
   });
-  test('should use a vertical offset of 26 if icon is undefined', () => {
+  test('should use a vertical offset of 28 if icon is undefined', () => {
     const encoding = getReferenceLineLabelsEncoding(
       defaultAxisOptions,
       { ...defaultReferenceLineOptions, icon: undefined, label: 'Hello world!' },
       defaultYPositionEncoding
     );
-    expect(encoding.update?.y).toHaveProperty('signal', 'height + 26');
+    expect(encoding.update?.y).toHaveProperty('signal', 'height + 28');
   });
-  test('should use a horizontal offset of 24 if there is an icon', () => {
+  test('should use a horizontal offset of 4 if there is an icon', () => {
     const encoding = getReferenceLineLabelsEncoding(
       { ...defaultAxisOptions, position: 'left' },
       { ...defaultReferenceLineOptions, icon: 'sentimentPositive', label: 'Hello world!' },
       defaultXPositionEncoding
     );
-    expect(encoding.update?.y).toHaveProperty('offset', 24);
+    expect(encoding.update?.y).toHaveProperty('offset', 4);
   });
-  test('should use a horizontal offset of 12 if icon is undefined', () => {
+  test('should use a horizontal offset of 4 if icon is undefined', () => {
     const encoding = getReferenceLineLabelsEncoding(
       { ...defaultAxisOptions, position: 'left' },
       { ...defaultReferenceLineOptions, icon: undefined, label: 'Hello world!' },
       defaultXPositionEncoding
     );
-    expect(encoding.update?.y).toHaveProperty('offset', 12);
+    expect(encoding.update?.y).toHaveProperty('offset', 4);
   });
 });

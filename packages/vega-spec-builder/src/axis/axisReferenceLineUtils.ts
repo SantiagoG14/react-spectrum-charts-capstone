@@ -26,7 +26,7 @@ import {
 import { DEFAULT_FONT_COLOR, DEFAULT_LABEL_FONT_WEIGHT } from '@spectrum-charts/constants';
 import { getColorValue } from '@spectrum-charts/themes';
 
-import { getPathFromIcon } from '../specUtils';
+import { getPathFromIcon, getStrokeDashFromLineType } from '../specUtils';
 import { AxisSpecOptions, Position, ReferenceLineOptions, ReferenceLineSpecOptions } from '../types';
 import { isVerticalAxis } from './axisUtils';
 
@@ -49,6 +49,7 @@ const applyReferenceLineOptionDefaults = (
   labelFontWeight: options.labelFontWeight ?? DEFAULT_LABEL_FONT_WEIGHT,
   layer: options.layer ?? 'front',
   name: `${axisOptions.name}ReferenceLine${index}`,
+  lineType: options.lineType ?? 'solid',
 });
 
 export const scaleTypeSupportsReferenceLines = (scaleType: ScaleType | undefined): boolean => {
@@ -97,7 +98,7 @@ export const getPositionEncoding = (
 
 export const getReferenceLineRuleMark = (
   { position, ticks }: AxisSpecOptions,
-  { color, colorScheme, name }: ReferenceLineSpecOptions,
+  { color, colorScheme, name, lineType }: ReferenceLineSpecOptions,
   positionEncoding: ProductionRule<NumericValueRef> | SignalRef
 ): RuleMark => {
   const startOffset = ticks ? 9 : 0;
@@ -132,6 +133,7 @@ export const getReferenceLineRuleMark = (
     encode: {
       enter: {
         stroke: { value: getColorValue(color, colorScheme) },
+        strokeDash: { value: getStrokeDashFromLineType(lineType ?? 'solid') },
       },
       update: {
         ...positionOptions[position],
@@ -237,6 +239,35 @@ export const getReferenceLineTextMark = (
 };
 
 /**
+ * Calculates the vertical and horizontal offsets for reference line labels based on axis position and icon presence
+ * @param position The axis position
+ * @param icon Whether an icon is present
+ * @returns Object containing verticalOffset and horizontalOffset values
+ */
+const calculateReferenceLineOffsets = (
+  position: Position,
+  icon?: string
+): { verticalOffset: number; horizontalOffset: number } => {
+  const isVertical = isVerticalAxis(position);
+  let verticalOffset = isVertical ? 40 : 28;
+  let horizontalOffset = isVertical ? 4 : 5;
+
+  if (icon) {
+    if (isVertical) {
+      verticalOffset += 25;
+    } else {
+      verticalOffset += 20;
+    }
+    if (!isVertical) {
+      horizontalOffset += 25;
+      verticalOffset += 2;
+    }
+  }
+
+  return { verticalOffset, horizontalOffset };
+};
+
+/**
  * Gets the reference line label encoding
  * @param labelFontWeight
  * @param label
@@ -250,9 +281,8 @@ export const getReferenceLineLabelsEncoding = (
   { colorScheme, icon, label, labelColor, labelFontWeight }: ReferenceLineSpecOptions & { label: string },
   positionEncoding: ProductionRule<NumericValueRef> | SignalRef
 ): GuideEncodeEntry<TextEncodeEntry> => {
-  const VERTICAL_OFFSET = icon ? 48 : 26; // Position label outside of icon.
-  const HORIZONTAL_OFFSET = isVerticalAxis(position) && icon ? 24 : 12; // Position label outside of icon for horizontal orientation.
-  const positionOptions = getAdditiveMarkPositionOptions(VERTICAL_OFFSET, positionEncoding, HORIZONTAL_OFFSET);
+  const { verticalOffset, horizontalOffset } = calculateReferenceLineOffsets(position, icon);
+  const positionOptions = getAdditiveMarkPositionOptions(verticalOffset, positionEncoding, horizontalOffset);
 
   return {
     update: {

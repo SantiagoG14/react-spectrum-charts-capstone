@@ -11,14 +11,14 @@
  */
 import { createElement, useMemo } from 'react';
 
-import { Bar, BarElement, Chart, ChartChildElement, Line, LineElement, OnClickCallback } from '../index';
+import { Bar, BarElement, Chart, ChartChildElement, Line, LineElement, MarkCallback } from '../index';
 import { getAllMarkElements } from '../utils';
 
 type MappedMarkElement = { name: string; element: BarElement | LineElement };
 
 export type MarkOnClickDetail = {
   markName?: string;
-  onClick?: OnClickCallback;
+  onClick?: MarkCallback;
 };
 
 export default function useMarkOnClickDetails(children: ChartChildElement[]): MarkOnClickDetail[] {
